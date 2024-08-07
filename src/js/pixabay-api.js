@@ -1,17 +1,30 @@
 
-export default function searchImagesByQuery(query) {
+import axios from "axios";
+
+
+
+
+export default async function searchImagesByQuery(query, page) {
     const URL = "https://pixabay.com/api/"; 
     const API_KEY = "45126867-574516766acc2fe1394cc55cd";
 
-    return fetch(`${URL}?key=${API_KEY}&q=${query}&image_type=photo&orientation=horizontal&safesearch=true`).then((response) => {
-        if (!response.ok) {
-          throw new Error(response.status);
+    try {
+      const response = await axios.get(URL, {
+        params: {
+            key: API_KEY,
+            q: query,
+            image_type: 'photo',
+            orientation: 'horizontal',
+            safesearch: true,
+            page: page,
+            per_page: 15
         }
-        return response.json();
-      }).catch((error) => {
-        iziToast.error({
-          position: "topRight",
-            message: `${error}`,
-        });
+    })
+      return response.data
+    } catch (error) {
+      iziToast.error({
+        position: "topRight",
+          message: `${error}`,
       })
+    }
 }
